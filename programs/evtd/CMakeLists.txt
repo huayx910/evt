@@ -1,3 +1,10 @@
+if(ENABLE_FSTACK_SUPPORT)
+    find_package(FStack REQUIRED)
+    find_package(DPDK REQUIRED)
+
+    link_directories($ENV{FF_DPDK}/lib)
+endif()
+
 add_executable( evtd main.cpp )
 if( UNIX AND NOT APPLE )
   set(rt_library rt )
@@ -72,6 +79,20 @@ if(ENABLE_BREAKPAD_SUPPORT)
     target_compile_definitions(evtd PUBLIC BREAKPAD_SUPPORT)
     target_link_libraries(evtd PRIVATE ${BREAKPAD_LIBRARIES})
     target_include_directories(evtd PUBLIC ${BREAKPAD_INCLUDE_DIR})
+endif()
+
+if(ENABLE_FSTACK_SUPPORT)
+    add_custom_command(TARGET evtd PRE_LINK
+        COMMAND "f-stack/static_hook.sh" "$<TARGET_FILE:http_plugin>"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+
+    target_compile_definitions(evtd PUBLIC FSTACK_SUPPORT)
+    target_link_libraries(evtd 
+        PRIVATE -Wl,${whole_archive_flag} ${FSTACK_LIBRARIES} -Wl,${no_whole_archive_flag}
+        PRIVATE -Wl,${whole_archive_flag} ${DPDK_LIBRARIES} -Wl,${no_whole_archive_flag}
+        )
+    target_include_directories(evtd PUBLIC ${FSTACK_INCLUDE_DIR}/lib)
 endif()
 
 install( TARGETS evtd

@@ -25,6 +25,11 @@
 #endif
 #endif
 
+#ifdef FSTACK_SUPPORT
+#include <ff_config.h>
+#include <ff_api.h>
+#endif
+
 #include "config.hpp"
 
 using namespace appbase;
@@ -110,6 +115,22 @@ dump_callback(const google_breakpad::MinidumpDescriptor& descriptor, void* conte
 
 #endif
 
+#ifdef FSTACK_SUPPORT
+
+static int
+init_fstack(const char* config) {
+    char* argv[5];
+    argv[0] = "evtd";
+    argv[1] = "-c";
+    argv[2] = (char*)config;
+    argv[3] = "-t";
+    argv[4] = "primary";
+
+    return ff_init(5, argv);
+}
+
+#endif
+
 enum return_codes {
     OTHER_FAIL        = -2,
     INITIALIZE_FAIL   = -1,
@@ -128,10 +149,19 @@ main(int argc, char** argv) {
         auto root = fc::app_path();
         app().set_default_data_dir(root / "evt/evtd/data");
         app().set_default_config_dir(root / "evt/evtd/config");
+
         if(!app().initialize<chain_plugin, http_plugin, net_plugin, producer_plugin>(argc, argv)) {
             return INITIALIZE_FAIL;
         }
         initialize_logging();
+
+#ifdef FSTACK_SUPPORT
+        auto ff_config = app().config_dir() / "fstack.ini";
+        auto r = init_fstack(ff_config.c_str());
+        if(r != 0) {
+            throw std::runtime_error("F-Stack initialize failed");
+        }
+#endif
 
 #ifdef BREAKPAD_SUPPORT
         auto dumps_path = app().data_dir() / "dumps";

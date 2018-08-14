@@ -11,6 +11,7 @@ option(ENABLE_COVERAGE_TESTING  "Build EVT for code coverage analysis" OFF)
 option(ENABLE_TESTING           "Enable testing targets" ON)
 option(ENABLE_COLOR_OUTPUT      "Enable diagnostics color output from compiler" ON)
 option(ENABLE_MAINNET_BUILD     "Build EVT for Mainnet" OFF)
+option(ENABLE_FSTACK            "Build EVT with F-Stack support" OFF)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/libraries/fc/CMakeModules")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
