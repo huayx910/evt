@@ -129,6 +129,11 @@ init_fstack(const char* config) {
     return ff_init(5, argv);
 }
 
+int
+ff_loop(void *arg) {
+   app().exec_one();
+}
+
 #endif
 
 enum return_codes {
@@ -143,6 +148,21 @@ enum return_codes {
 
 int
 main(int argc, char** argv) {
+#ifdef FSTACK_SUPPORT
+    auto ff_path = ::getenv("FF_PATH");
+    if(ff_path == nullptr) {
+        throw std::runtime_error("Cannot find FF_PATH environment variable");
+    }
+
+    auto ff_config = std::string(ff_path);
+    ff_config.append("/config.ini");
+
+    auto r = init_fstack(ff_config.c_str());
+    if(r != 0) {
+        throw std::runtime_error("F-Stack initialize failed");
+    }
+#endif
+
     try {
         app().set_version(evt::evtd::config::version);
 
@@ -154,14 +174,6 @@ main(int argc, char** argv) {
             return INITIALIZE_FAIL;
         }
         initialize_logging();
-
-#ifdef FSTACK_SUPPORT
-        auto ff_config = app().config_dir() / "fstack.ini";
-        auto r = init_fstack(ff_config.c_str());
-        if(r != 0) {
-            throw std::runtime_error("F-Stack initialize failed");
-        }
-#endif
 
 #ifdef BREAKPAD_SUPPORT
         auto dumps_path = app().data_dir() / "dumps";
@@ -175,7 +187,13 @@ main(int argc, char** argv) {
         ilog("evtd version ${ver}", ("ver", evt::utilities::common::itoh(static_cast<uint32_t>(app().version()))));
         ilog("evt root is ${root}", ("root", root.string()));
         app().startup();
+
+#ifndef FSTACK_SUPPORT
         app().exec();
+#else
+        app().pre_exec();
+        ff_run(ff_loop, nullptr);
+#endif
     }
     catch(const extract_genesis_state_exception& e) {
         return EXTRACTED_GENESIS;

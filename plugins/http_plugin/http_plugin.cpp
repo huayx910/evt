@@ -460,7 +460,7 @@ http_plugin::plugin_initialize(const variables_map& options) {
             string host   = lipstr.substr(0, lipstr.find(':'));
             string port   = lipstr.substr(host.size() + 1, lipstr.size());
             
-            tcp::resolver::query query(tcp::v4(), host.c_str(), port.c_str());
+            tcp::resolver::query query(tcp::v4(), host.c_str(), port.c_str(), boost::asio::ip::resolver_query_base::numeric_service);
 
             try {
                 my->listen_endpoint = *resolver.resolve(query);
@@ -491,7 +491,7 @@ http_plugin::plugin_initialize(const variables_map& options) {
             string host   = lipstr.substr(0, lipstr.find(':'));
             string port   = lipstr.substr(host.size() + 1, lipstr.size());
 
-            tcp::resolver::query query(tcp::v4(), host.c_str(), port.c_str());
+            tcp::resolver::query query(tcp::v4(), host.c_str(), port.c_str(), boost::asio::ip::resolver_query_base::numeric_service);
 
             try {
                 my->https_listen_endpoint = *resolver.resolve(query);

@@ -2010,7 +2010,7 @@ net_plugin_impl::connect(connection_ptr c) {
     auto host = c->peer_addr.substr(0, colon);
     auto port = c->peer_addr.substr(colon + 1);
     idump((host)(port));
-    tcp::resolver::query query(tcp::v4(), host.c_str(), port.c_str());
+    tcp::resolver::query query(tcp::v4(), host.c_str(), port.c_str(), boost::asio::ip::resolver_query_base::numeric_service);
     connection_wptr      weak_conn = c;
     // Note: need to add support for IPv6 too
 
@@ -3043,7 +3043,7 @@ net_plugin::plugin_initialize(const variables_map& options) {
             auto host       = my->p2p_address.substr(0, my->p2p_address.find(':'));
             auto port       = my->p2p_address.substr(host.size() + 1, my->p2p_address.size());
             idump((host)(port));
-            tcp::resolver::query query(tcp::v4(), host.c_str(), port.c_str());
+            tcp::resolver::query query(tcp::v4(), host.c_str(), port.c_str(), boost::asio::ip::resolver_query_base::numeric_service);
             // Note: need to add support for IPv6 too?
 
             my->listen_endpoint = *my->resolver->resolve(query);

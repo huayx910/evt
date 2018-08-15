@@ -83,7 +83,23 @@ endif()
 
 if(ENABLE_FSTACK_SUPPORT)
     add_custom_command(TARGET evtd PRE_LINK
-        COMMAND "f-stack/static_hook.sh" "$<TARGET_FILE:http_plugin>"
+        COMMAND "f-stack/hook.py" "$<TARGET_FILE:http_plugin>"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+    add_custom_command(TARGET evtd PRE_LINK
+        COMMAND "f-stack/hook.py" "$<TARGET_FILE:http_client_plugin>"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+    add_custom_command(TARGET evtd PRE_LINK
+        COMMAND "f-stack/hook.py" "$<TARGET_FILE:net_plugin>"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+    add_custom_command(TARGET evtd PRE_LINK
+        COMMAND "f-stack/hook.py" "$<TARGET_FILE:bnet_plugin>"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+    add_custom_command(TARGET evtd PRE_LINK
+        COMMAND "f-stack/hook.py" "$<TARGET_FILE:fc>"
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
     )
 
