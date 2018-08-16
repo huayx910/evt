@@ -164,6 +164,7 @@ main(int argc, char** argv) {
 #endif
 
     try {
+        app().init();
         app().set_version(evt::evtd::config::version);
 
         auto root = fc::app_path();
