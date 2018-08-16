@@ -83,6 +83,26 @@ endif()
 
 if(ENABLE_FSTACK_SUPPORT)
     add_custom_command(TARGET evtd PRE_LINK
+        COMMAND "f-stack/hook.py" "$<TARGET_FILE:bnet_plugin>"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+    add_custom_command(TARGET evtd PRE_LINK
+        COMMAND "f-stack/hook.py" "$<TARGET_FILE:chain_plugin>"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+    add_custom_command(TARGET evtd PRE_LINK
+        COMMAND "f-stack/hook.py" "$<TARGET_FILE:chain_api_plugin>"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+    add_custom_command(TARGET evtd PRE_LINK
+        COMMAND "f-stack/hook.py" "$<TARGET_FILE:evt_plugin>"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+    add_custom_command(TARGET evtd PRE_LINK
+        COMMAND "f-stack/hook.py" "$<TARGET_FILE:evt_api_plugin>"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+    add_custom_command(TARGET evtd PRE_LINK
         COMMAND "f-stack/hook.py" "$<TARGET_FILE:http_plugin>"
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
     )
@@ -95,11 +115,31 @@ if(ENABLE_FSTACK_SUPPORT)
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
     )
     add_custom_command(TARGET evtd PRE_LINK
-        COMMAND "f-stack/hook.py" "$<TARGET_FILE:bnet_plugin>"
+        COMMAND "f-stack/hook.py" "$<TARGET_FILE:net_api_plugin>"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+    add_custom_command(TARGET evtd PRE_LINK
+        COMMAND "f-stack/hook.py" "$<TARGET_FILE:producer_plugin>"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+    add_custom_command(TARGET evtd PRE_LINK
+        COMMAND "f-stack/hook.py" "$<TARGET_FILE:producer_api_plugin>"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+    add_custom_command(TARGET evtd PRE_LINK
+        COMMAND "f-stack/hook.py" "$<TARGET_FILE:evt_chain>"
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
     )
     add_custom_command(TARGET evtd PRE_LINK
         COMMAND "f-stack/hook.py" "$<TARGET_FILE:fc>"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+    add_custom_command(TARGET evtd PRE_LINK
+        COMMAND "f-stack/hook.py" "$<TARGET_FILE:appbase>"
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+    add_custom_command(TARGET evtd PRE_LINK
+        COMMAND "f-stack/hook.py" "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/evtd.dir/main.cpp.o"
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
     )
 

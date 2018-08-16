@@ -11,7 +11,7 @@ option(ENABLE_COVERAGE_TESTING  "Build EVT for code coverage analysis" OFF)
 option(ENABLE_TESTING           "Enable testing targets" ON)
 option(ENABLE_COLOR_OUTPUT      "Enable diagnostics color output from compiler" ON)
 option(ENABLE_MAINNET_BUILD     "Build EVT for Mainnet" OFF)
-option(ENABLE_FSTACK            "Build EVT with F-Stack support" OFF)
+option(ENABLE_FSTACK_SUPPORT    "Build EVT with F-Stack support" OFF)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/libraries/fc/CMakeModules")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
@@ -210,6 +210,13 @@ message( STATUS "Using '${EVT_ROOT_KEY}' as public key for evt account" )
 
 if(ENABLE_TESTING)
     enable_testing()
+endif()
+
+if(ENABLE_FSTACK_SUPPORT)
+  find_package(FStack REQUIRED)
+  find_package(DPDK REQUIRED)
+
+  include_directories(${FSTACK_INCLUDE_DIR}/lib)
 endif()
 
 add_subdirectory( libraries )

@@ -5,12 +5,12 @@ import sys
 
 from subprocess import call
 
-symlist = os.environ['FF_PATH'] + '/lib/ff_api.symlist'
 lib = sys.argv[1]
 
 print("Hooking {}".format(lib))
 
-with open(symlist, 'r') as fs:
+syms_file = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), "syms")
+with open(syms_file, 'r') as fs:
     for sym in fs:
-    	s = sym[3:]
-        call(['objcopy', '--redefine-sym', '{0}=ff_{0}'.format(s), lib])
+        sym = sym.strip()
+        call(['objcopy', '--redefine-sym', '{0}=ff_{0}'.format(sym), lib])
